@@ -128,5 +128,7 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# .gitignore
+# Ignore files that may include API keys
+config.py
+api_keys.py
 config.js
