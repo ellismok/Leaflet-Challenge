@@ -28,27 +28,48 @@ leaf1map.addTo(mapplacement);
 // Here we make an AJAX call that retrieves our earthquake geoJSON data.
 d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson").then(function(data) {
 
-  // This function returns the style data for each of the earthquakes we plot on
-  // the map. We pass the magnitude of the earthquake into two separate functions
-  // to calculate the color and radius.
+  // use this function to set up the style as we get the 'getColor' = coordinates and 'getRadius' for the magnitude
   function styleInfo(feature) {
     return {
       opacity: 1,
       fillOpacity: 1,
-      fillColor: getColor(feature.geometry.coordinates[2]),
+      fillColor: fillColor(feature.geometry.coordinates[2]), // grabbing the coordinates from the json (e.g. "coordinates":[-74.9491,-39.2503,11.76])
       color: "#000000",
-      radius: getRadius(feature.properties.mag),
+      radius: fillRadius(feature.properties.mag),// grabbing the magnitude (e.g. "mag":4.3) from json 
       stroke: true,
       weight: 0.5
     };
   }
 
-//   // This function determines the color of the marker based on the magnitude of the earthquake.
-//   YOUR_CODE_HERE
+  // This function determines the color of the marker based on the magnitude of the earthquake.
+  function fillColor(intensity) {
+    switch (true) {
+    case intensity > 90:
+      return "#b71212"; // changing the colors to a spectrum of dark red to light red
+    case intensity > 70:
+      return "#e61717";
+    case intensity > 50:
+      return "#ea2c2c";
+    case intensity > 30:
+      return "#ec4343";
+    case intensity > 10:
+      return "#ef5a5a";
+    default:
+      return "#f17272";
+    }
+  }
+  
 
-//   // This function determines the radius of the earthquake marker based on its magnitude.
-//   // Earthquakes with a magnitude of 0 were being plotted with the wrong radius.
-//   YOUR_CODE_HERE
+
+  // This function determines the radius of the earthquake marker based on its magnitude.
+  
+  function fillRadius(magnitude) { // grabbing the magnitude 
+    if (magnitude === 0) { // Fill (0) with 1
+      return 1;
+    }
+
+    return magnitude * 3;
+  }
 
 //   // Here we add a GeoJSON layer to the map once the file is loaded.
 //   YOUR_CODE_HERE
