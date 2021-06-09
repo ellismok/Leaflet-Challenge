@@ -71,9 +71,14 @@ d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojs
     return magnitude * 3;
   }
 
-//   // Here we add a GeoJSON layer to the map once the file is loaded.
-//   YOUR_CODE_HERE
+  // Adding a L.geoJSON layer to add a feature such as the L.circleMarker
 
+  L.geoJSON(someGeojsodanFeature, {
+      pointToLayer: function (feature, latlng) {
+          return L.circleMarker(latlng, geojsonMarkerOptions);
+      }
+
+  }).addTo(map);
 //   // Here we create a legend control object.
 //   YOUR_CODE_HERE
 
