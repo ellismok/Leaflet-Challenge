@@ -49,10 +49,11 @@ var allMaps = L.map("mapid", {
     51.505, -0.09
   ],
   zoom: 2,
-  layers: [grayscale, satelliteview, outdoorslayer]
+  layers: [grayMap, satelliteMap, outdoorsMap]
 });
 
-
+// Adding our 'graymap' tile layer to the map.
+grayMap.addTo(allMaps);
 
 // We create the layers for our two different sets of data, earthquakes and
 // tectonicplates.
@@ -63,7 +64,11 @@ var earthquakes = new L.LayerGroup();
 // of these maps will be visible at a time!
 // Create a basemaps object for the three tileLayers from above. 
 // The key should be a human readable name for the tile layer, and the value should be a tileLayer variable
-var baseMaps = {YOUR_CODE_HERE};
+var baseMaps = {
+  "Gray Map": grayMap,
+  "Satellite Map" : satelliteMap,
+  "Outdoors Map": outdoorsMap,
+};
 
 // We define an object that contains all of our overlays. Any combination of
 // these overlays may be visible at the same time!
