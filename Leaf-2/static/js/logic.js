@@ -1,20 +1,60 @@
 // We create the tile layers that will be the selectable backgrounds of our map.
-
+console.log("Step 2 working");
 // Create a L.tilelayer() using the 'mapbox/light-v10' map id
-var grayMap = YOUR_CODE_HERE
+var grayMap = L.tileLayer(
+  "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}",
+  {
+    attribution:
+      "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
+    tileSize: 512,
+    maxZoom: 18,
+    zoomOffset: -1,
+    id: "mapbox/light-v10",
+    accessToken: API_KEY
+  }
+);
 
 // Create a L.tilelayer() using the 'mapbox/satellite-v9' map id
-var satelliteMap = YOUR_CODE_HERE
+var satelliteMap = L.tileLayer(
+  "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}",
+  {
+    attribution:
+      "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
+    tileSize: 512,
+    maxZoom: 18,
+    zoomOffset: -1,
+    id: "mapbox/satellite-v9",
+    accessToken: API_KEY
+  }
+);
+
 
 // Create a L.tilelayer() using the 'mapbox/satellite-v9' map id
-var outdoorsMap = YOUR_CODE_HERE
+var outdoorsMap = L.tileLayer(
+  "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}",
+  {
+    attribution:
+      "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
+    tileSize: 512,
+    maxZoom: 18,
+    zoomOffset: -1,
+    id: "mapbox/satellite-v9",
+    accessToken: API_KEY
+  }
+);
 
 
 // We then create the map object with options. Adding the tile layers we just
 // created to an array of layers.
 
 // Create a L.map(), reference the 'mapid' element in the HTML page, and pass in the three layers above
-var myMap = YOUR_CODE_HERE
+var myMap = L.map("mapid", {
+  center: [
+    40.7, -94.5
+  ],
+  zoom: 3
+});
+
 
 
 // We create the layers for our two different sets of data, earthquakes and
