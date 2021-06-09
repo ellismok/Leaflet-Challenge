@@ -73,11 +73,16 @@ d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojs
 
   // Adding a L.geoJSON layer to add a feature such as the L.circleMarker
 
-  L.geoJSON(someGeojsodanFeature, {
+  L.geoJSON(data, {
       pointToLayer: function (feature, latlng) {
-          return L.circleMarker(latlng, geojsonMarkerOptions);
+          return L.circleMarker(latlng, data);
       }
-
+      // styling like we set above
+      style: styleInfo, 
+      // popup for each marker
+      onEachFeature: function function (feature, latlng) {
+        layer.bindPopup(feature.properties.popupContent);
+      }
   }).addTo(map);
 //   // Here we create a legend control object.
 //   YOUR_CODE_HERE
