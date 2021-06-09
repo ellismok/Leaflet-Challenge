@@ -1,5 +1,5 @@
 // We create the tile layers that will be the selectable backgrounds of our map.
-console.log("Step 2 working");
+console.log("Reading in");
 // Create a L.tilelayer() using the 'mapbox/light-v10' map id
 var grayMap = L.tileLayer(
   "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}",
@@ -43,16 +43,13 @@ var outdoorsMap = L.tileLayer(
   }
 );
 
-
-// We then create the map object with options. Adding the tile layers we just
-// created to an array of layers.
-
 // Create a L.map(), reference the 'mapid' element in the HTML page, and pass in the three layers above
-var myMap = L.map("mapid", {
+var allMaps = L.map("mapid", {
   center: [
-    40.7, -94.5
+    51.505, -0.09
   ],
-  zoom: 3
+  zoom: 2,
+  layers: [grayscale, satelliteview, outdoorslayer]
 });
 
 

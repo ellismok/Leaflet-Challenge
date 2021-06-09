@@ -1,13 +1,12 @@
-// console.log("Leaf-1 file is connecting");
+console.log("Leaf-1 file is connecting");
 
 // Start background of the map
-var leaf1map = L.tileLayer( // Use L.tileLayer() to load and display tile layers on the map
+var graymap = L.tileLayer( // Use L.tileLayer() to load and display tile layers on the map
   "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}",
   {
     attribution:
       "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
     tileSize: 500,
-    minZoom: Number,
     maxZoom: 12,
     errorTileUrl: "broken map, contact creator", 
     zoomOffset: -1,
@@ -17,32 +16,32 @@ var leaf1map = L.tileLayer( // Use L.tileLayer() to load and display tile layers
 );
 
 // initialize the map on the "map" div with a given center and zoom
-var mapplacement = L.map("mapplacement", { // 'mapplacement' found in html that hold our map
+var map = L.map("mapid", { // 'mapid' found in html that hold our map
   center: [51.505, -0.09],
   zoom: 13
 });
 
 // // Then we add our 'graymap' tile layer to the map.
-leaf1map.addTo(mapplacement);
+graymap.addTo(map);
 
 // Here we make an AJAX call that retrieves our earthquake geoJSON data.
-d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson").then(function(data) {
+d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson").then(function(data) {
 
   // use this function to set up the style as we get the 'getColor' = coordinates and 'getRadius' for the magnitude
   function styleInfo(feature) {
     return {
       opacity: 1,
       fillOpacity: 1,
-      fillColor: fillColor(feature.geometry.coordinates[2]), // grabbing the coordinates from the json (e.g. "coordinates":[-74.9491,-39.2503,11.76])
+      getColor: getColor(feature.geometry.coordinates[2]), // grabbing the coordinates from the json (e.g. "coordinates":[-74.9491,-39.2503,11.76])
       color: "#000000",
-      radius: fillRadius(feature.properties.mag),// grabbing the magnitude (e.g. "mag":4.3) from json 
+      radius: getRadius(feature.properties.mag),// grabbing the magnitude (e.g. "mag":4.3) from json 
       stroke: true,
       weight: 0.5
     };
   }
 
   // This function determines the color of the marker based on the magnitude of the earthquake.
-  function fillColor(intensity) {
+  function getColor(intensity) {
     switch (true) {
     case intensity > 90:
       return "#b71212"; // changing the colors to a spectrum of dark red to light red
@@ -58,61 +57,66 @@ d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojs
       return "#f17272";
     }
   }
-  
-
 
   // This function determines the radius of the earthquake marker based on its magnitude.
   
-  function fillRadius(magnitude) { // grabbing the magnitude 
+  function getRadius(magnitude) { // grabbing the magnitude 
     if (magnitude === 0) { // Fill (0) with 1
       return 1;
     }
 
-    return magnitude * 3;
+    return magnitude * 4;
   }
 
   // Adding a L.geoJSON layer to add a feature such as the L.circleMarker
-
-  L.geoJSON(data, {
-      pointToLayer: function (feature, latlng) {
-          return L.circleMarker(latlng, data);
-      }
-      // styling like we set above
-      style: styleInfo, 
-      // popup for each marker
-      onEachFeature: function function (feature, latlng) {
-        layer.bindPopup(feature.properties.popupContent);
-      }
+  
+  L.geoJson(data, {
+    // We turn each feature into a circleMarker on the map.
+    pointToLayer: function(feature, latlng) {
+      return L.circleMarker(latlng);
+    },
+    // We set the style for each circleMarker using our styleInfo function.
+    // style: styleInfo,
+    // We create a popup for each marker to display the magnitude and location of the earthquake after the marker has been created and styled
+    onEachFeature: function(feature, layer) {
+      layer.bindPopup(
+        "Magnitude: "
+          + feature.properties.mag
+          + "<br>Depth: "
+          + feature.geometry.coordinates[2]
+          + "<br>Location: "
+          + feature.properties.place
+      );
+    }
   }).addTo(map);
 
   // Here we create a legend control object.
-  var legend = L.control({position: 'bottomright'});
+  var legend = L.control({
+    position: "bottomright"
+  }
+    );
+  
+  // Here we create a legend control object.
+  legend.onAdd = function() {
+    var div = L.DomUtil.create("div", "info legend");
 
-  legend.onAdd = function (map) {
+    var grades = [-10, 10, 30, 50, 70, 90];
+    var colors = [
+      "#98ee00",
+      "#d4ee00",
+      "#eecc00",
+      "#ee9c00",
+      "#ea822c",
+      "#ea2c2c"
+    ];
 
-    var div = L.DomUtil.create('div', 'info legend'),
-        grades = [0, 10, 20, 50, 100, 200, 500, 1000],
-        labels = [];
-
-    // loop through our density intervals and generate a label with a colored square for each interval
+  // loop through our density intervals and generate a label with a colored square for each interval
     for (var i = 0; i < grades.length; i++) {
-        div.innerHTML +=
-            '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
-            grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+      div.innerHTML += "<i style='background: " + colors[i] + "'></i> "
+      + grades[i] + (grades[i + 1] ? "&ndash;" + grades[i + 1] + "<br>" : "+");
     }
-
     return div;
-};
-
-  legend.addTo(mapplacement);
-
-
-//   // Then add all the details for the legend
-//   YOUR_CODE_HERE
-
-//     // Looping through our intervals to generate a label with a colored square for each interval.
-//     YOUR_CODE_HERE
-
-  // Finally, we our legend to the map.
-});
-
+  };
+// Finally, we our legend to the map.
+  legend.addTo(map);
+)};
