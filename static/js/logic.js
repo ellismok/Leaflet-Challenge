@@ -75,37 +75,103 @@ var baseMaps = {
 
 // Create a overlays object for the two LayerGroups from above. 
 // The key should be a human readable name for the layer group, and the value should be a LayerGroup variable
-var overlayMaps = {YOUR_CODE_HERE};
+var overlayMaps = {
+  "Tectonic Plates": tectonicPlates,
+  Earthquakes: earthquakes
+};
 
 // Add a L.control.layers() object and pass in the baseMaps and overlayMaps, and then .addTo myMap
-YOUR_CODE_HERE;
+L.control
+  .layers(baseMaps, overlayMaps)
+  .addTo(allMaps);
+
+
+
+
+
 
 // Use d3.json() to call the API endpoint for earthquake geoJSON data, 
 // .then() fire off an anonymous function that takes a single argument `data`.
-YOUR_CODE_HERE {
-  // Use L.geoJson() to parse the data, and do the following:
-  L.geoJson(data, {
-    // use pointToLayer to convert each feature to an L.circleMarker, see https://geospatialresponse.wordpress.com/2015/07/26/leaflet-geojson-pointtolayer/ for a tutorial
-    // use style to set the color, radius, and other options for each circleMarker dynamically using the magnitude data
-    // use onEachFeature to bind a popup with the magnitude and location of the earthquake to the layer (see above tutorial for an example)
-  }).YOUR_CODE_HERE;  // use .addTo to add the L.geoJson object to the earthquakes LayerGroup
+var url = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson";
 
-  // Then we add the earthquake layer to our map.
-  YOUR_CODE_HERE; // use .addTo to add the earthquakes LayerGroup to the myMap object
+d3.json(url).then(function(data) {
+  var earthquakeData = data.features;
+  // console.log(earthquakeData)
+}
 
-  // Create a dynamic legend that describes the color scheme for the circles
-  // see this tutorial for guidance: https://www.igismap.com/legend-in-leafletjs-map-with-topojson/
-  YOUR_CODE_HERE
+// This function determines the color of the marker based on the magnitude of the earthquake.
+function getColor(intensity) {
+  switch (true) {
+  case intensity > 90:
+    return "#b71212"; // changing the colors to a spectrum of dark red to light red
+  case intensity > 70:
+    return "#e61717";
+  case intensity > 50:
+    return "#ea2c2c";
+  case intensity > 30:
+    return "#ec4343";
+  case intensity > 10:
+    return "#ef5a5a";
+  default:
+    return "#f17272";
+  }
+}
 
-  // BONUS
-  // Make another d3.json() call to the tectonic plates API endpoint
-  // then fire off an anonymous function that takes a single argument plateData
-  YOUR_CODE_HERE {
-      // Create an L.geoJson() that reads the plateData, and sets some options per your choosing 
-      YOUR_CODE_HERE
-      .YOUR_CODE_HERE; // use .addTo() to add the l.geoJson layer to the tectonicPlates LayerGroup
+// This function determines the radius of the earthquake marker based on its magnitude.
+function getRadius(magnitude) { // grabbing the magnitude 
+  if (magnitude === 0) { // Fill (0) with 1
+    return 1;
+  }
 
-      // Then add the tectonicplates layer to the map.
-      YOUR_CODE_HERE; // use .addTo to add the tectonicPlates LayerGroup to the myMap object
+  return magnitude * 4;
+}
+
+L.geoJson(data, {
+  // We turn each feature into a circleMarker on the map.
+  pointToLayer: function(feature, latlng) {
+    return L.circleMarker(latlng, {
+      radius: 10, 
+      fillOpacity: 0.85
     });
+  },
+  // We set the style for each circleMarker using our styleInfo function.
+  style: function (styleInfo) {
+    return {
+      opacity: 1,
+      fillOpacity: 1,
+      getColor: getColor(feature.geometry.coordinates[2]), // grabbing the coordinates from the json (e.g. "coordinates":[-74.9491,-39.2503,11.76])
+      color: "#000000",
+      radius: getRadius(feature.properties.mag),// grabbing the magnitude (e.g. "mag":4.3) from json 
+      stroke: true,
+      weight: 0.5
+    };,
+  },
+  // We create a popup for each marker to display the magnitude and location of the earthquake after the marker has been created and styled
+  onEachFeature: function(feature, layer) {
+    layer.bindPopup(
+      "Magnitude: "
+        + feature.properties.mag
+        + "<br>Depth: "
+        + feature.geometry.coordinates[2]
+        + "<br>Location: "
+        + feature.properties.place
+    );
+  }
+}).addTo(earthquakes);
+
+earthquakes.addTo(allMaps);
+
+
+
+  // // BONUS
+  // // Make another d3.json() call to the tectonic plates API endpoint
+  // // then fire off an anonymous function that takes a single argument plateData
+  // YOUR_CODE_HERE {
+  //     // Create an L.geoJson() that reads the plateData, and sets some options per your choosing 
+  //     YOUR_CODE_HERE
+  //     .YOUR_CODE_HERE; // use .addTo() to add the l.geoJson layer to the tectonicPlates LayerGroup
+
+  //     // Then add the tectonicplates layer to the map.
+  //     YOUR_CODE_HERE; // use .addTo to add the tectonicPlates LayerGroup to the myMap object
+  //   });
 });
