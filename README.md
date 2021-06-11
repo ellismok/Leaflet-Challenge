@@ -1,9 +1,5 @@
 # Leaflet-Challenge - Earthquake Magnitude Check!
 
-<br>
-
-<hr>
-
 ## MAIN OBJECTIVES
 <ul>
     <li>To visualize earthquake data from the United States Geological Survey (USGS) to allow public viewers to digest their massive data account with interactive website. This allows more people to take interest as well as educate others as well.</li>
