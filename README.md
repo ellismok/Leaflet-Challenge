@@ -18,7 +18,8 @@
 <ul>
     <li><img width="1438" alt="Screen Shot 2021-06-11 at 2 03 48 AM" src="https://user-images.githubusercontent.com/74644774/121662416-2b76b780-ca5a-11eb-9d6d-452104e3fd4a.png">
 </li>
-    <li><img width="395" alt="Screen Shot 2021-06-11 at 2 04 03 AM" src="https://user-images.githubusercontent.com/74644774/121662468-3b8e9700-ca5a-11eb-9b34-4d7012558bba.png">
+    <li><img width="1437" alt="Screen Shot 2021-06-11 at 2 12 02 AM" src="https://user-images.githubusercontent.com/74644774/121662645-71cc1680-ca5a-11eb-8ab3-efacb5f3b726.png">
+
 </li>
 </ul>
 
