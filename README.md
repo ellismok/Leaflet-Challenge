@@ -2,8 +2,6 @@
 
 <br>
 
-<img width="588" alt="Screen Shot 2021-06-11 at 1 53 02 AM" src="https://user-images.githubusercontent.com/74644774/121660741-5fe97400-ca58-11eb-9cfa-97b42ed1167a.png">
-
 <hr>
 
 ## MAIN OBJECTIVES
